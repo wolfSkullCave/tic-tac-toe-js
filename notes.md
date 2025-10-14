@@ -80,6 +80,32 @@ FUNCTION draw_board_state
     draw_board(row_c)
 END
 
+FUNCTION check_win_conditions(sym, ...grid)
+    check if the first, second and third row are all filled with sym 
+    checkRows (sym, grid)
+
+    check if first, second and third column are all filled with sym
+    checkColumns (sym. grid)
+    
+    check if forward and backward diagonal are filled with sym
+    checkDiagonals (sym, grid)
+END
+
+FUNCTION checkRows (sym, ...grid)
+    check if grid rows are equal to sym and return true
+    else return false
+END
+
+FUNCTION checkColumns (sym, ...grid)
+    check if grid columns are equal to sym and return true
+    else return false
+END
+
+FUNCTION checkDiagonals (sym, ...grid)
+    check if grid diagonals are equal to sym and return true
+    else return false
+END
+
 FUNCTION create_players
     Prompt the operator for symbols for player_1 and player_2
     SET symbols for player_1 and player_2    
@@ -91,10 +117,16 @@ FUNCTION players_move (player)
     IF position is empty THEN
         SET position to player.symbol
     ELSE 
+        Print "Position is already taken"
 END
 
 Start_gameplay_loop
-    draw_board_state
-    create_players
-    
+    WHILE board is not full
+        draw_board_state
+        create_players
+        players_move(player1)
+        checkWinConditions(player1.sym, row1,row2,row3)
+        players_move(player2)
+        checkWinConditions(player2.sym, row1,row2,row3)
+    END
 END
