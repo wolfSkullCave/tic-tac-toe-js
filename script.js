@@ -1,35 +1,47 @@
 const gameboard = (function () {
-  let grid = [
+  const positions = [
     ["00", "01", "02"],
     ["10", "11", "12"],
     ["20", "21", "22"],
   ];
 
-  const drawboard = () => {
-    grid.forEach((row) => {
+  let grid = [
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ];
+
+  const drawPositons = () => drawboard(positions);
+
+  const drawboard = (board = grid) => {
+    board.forEach((row) => {
       console.log(row);
     });
   };
 
-  const setBoard = (board) => {
-    grid = board;
-  };
-
-  return { grid, drawboard, setBoard };
+  return { grid, drawPositons, drawboard };
 })();
 
 const playTurn = (function () {
-  const { grid, drawboard } = gameboard;
+  const { grid, drawboard, drawPositons } = gameboard;
 
-  const movePlayer = (player) => {
-    const prompt = require("prompt-sync")({ siginit: true });
-    let move = prompt(`${player}: Where would you like to place a mark? `);
+  const movePlayer = (player, move, board = grid) => {
+    if (!move) {
+      const prompt = require("prompt-sync")({ siginit: true });
+      move = prompt(`${player}: Where would you like to place a mark? `);
+    }
+
     let row = Number(move.slice(0, 1));
     let cell = Number(move.slice(1, 2));
-    grid[row][cell] = player;
+
+    if (board[row][cell] === "") {
+      board[row][cell] = player;
+    } else {
+      console.log("Invalid move");
+    }
   };
 
-  return { drawboard, movePlayer };
+  return { drawPositons, drawboard, movePlayer };
 })();
 
 const player = (function () {
@@ -40,10 +52,12 @@ const player = (function () {
 })();
 
 const winConditions = (function () {
+  const { grid, drawboard, drawPositons } = gameboard;
+
   const checkRows = (player, board) =>
     board.some((row) => row.every((cell) => cell === player));
 
-  const checkCols = (player, board) => {
+  const checkCols = (player, board = grid) => {
     // create a new array consisting of the columns of the board array
     let column = [];
     for (let i = 0; i < 3; i++) {
@@ -53,7 +67,7 @@ const winConditions = (function () {
     return checkRows(player, column);
   };
 
-  const checkDiags = (player, board) => {
+  const checkDiags = (player, board = grid) => {
     // create an array from the diagonals of board
     let diagonals = [
       [board[0][0], board[1][1], board[2][2]],
@@ -63,10 +77,22 @@ const winConditions = (function () {
     return checkRows(player, diagonals);
   };
 
-  const checkDraw = (board) =>
+  const checkDraw = (board = grid) =>
     board.every((row) => row.every((cell) => cell !== ""));
 
-  return { checkRows, checkCols, checkDiags, checkDraw };
+  const allChecks = (player, board = grid) => {
+    if (checkCols(player, board)) {
+      return true;
+    } else if (checkDiags(player, board)) {
+      return true;
+    } else if (checkRows(player, board)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return { checkRows, checkCols, checkDiags, checkDraw, allChecks };
 })();
 
 // --- Tests for objects ---
@@ -79,7 +105,7 @@ function testGameBoard() {
 
 function testPlayTurn() {
   console.log("--- Play turn tests ---");
-  playTurn.movePlayer(player.x);
+  playTurn.movePlayer(player.x, "11");
   playTurn.drawboard();
 }
 
@@ -88,7 +114,13 @@ function testWinCons() {
   const testboard = [
     ["X", "X", "X"],
     ["X", "X", "O"],
-    ["X", "O", ""],
+    ["X", "O", "O"],
+  ];
+
+  const testDraw = [
+    ["X", "X", "O"],
+    ["O", "X", "X"],
+    ["X", "O", "O"],
   ];
 
   console.log("check rows: ", winConditions.checkRows(player.x, testboard));
@@ -97,9 +129,64 @@ function testWinCons() {
     "check diagonals: ",
     winConditions.checkDiags(player.x, testboard)
   );
-  console.log("Check for draw: ", winConditions.checkDraw(testboard));
+  console.log("Check for draw: ", winConditions.checkDraw(testDraw));
+  console.log("All checks: ", winConditions.allChecks(player.x, testDraw));
 }
 
 // testGameBoard();
 // testPlayTurn();
-testWinCons();
+// testWinCons();
+
+// run script
+function autoPlay() {
+  const xMoves = ["11", "20", "01"];
+  const oMoves = ["00", "02", "21"];
+  let winner = false;
+
+  console.log("--- Board positions ---");
+  playTurn.drawPositons();
+
+  console.log("--- Board state ---");
+  playTurn.drawboard();
+  let turnNo = 0;
+  let turnPlayer = [player.x, player.o];
+
+  while (!winner) {
+    console.log(`--- Turn ${turnNo}`);
+  }
+}
+
+function runGame() {
+  console.log("--- Board positions ---");
+  playTurn.drawPositons();
+
+  console.log("--- Board state ---");
+  playTurn.drawboard();
+
+  console.log("--- Player X goes first ---");
+  playTurn.movePlayer(player.x, "11");
+  playTurn.drawboard();
+  winConditions.allChecks(player.x);
+
+  console.log("--- Turn 2: Player O goes next ---");
+  playTurn.movePlayer(player.o, "00");
+  playTurn.drawboard();
+
+  console.log("--- Turn 3: Player X goes next ---");
+  playTurn.movePlayer(player.x, "20");
+  playTurn.drawboard();
+
+  console.log("--- Turn 4: Player O goes next ---");
+  playTurn.movePlayer(player.o, "02");
+  playTurn.drawboard();
+
+  console.log("--- Turn 5: Player X goes next ---");
+  playTurn.movePlayer(player.x, "01");
+  playTurn.drawboard();
+
+  console.log("--- Turn 6: Player O goes next ---");
+  playTurn.movePlayer(player.o, "21");
+  playTurn.drawboard();
+}
+
+runGame();
