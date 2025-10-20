@@ -1,13 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TIC-TAC-TOE: wolf_skullcave</title>
-    <link rel="icon" type="image/svg+xml" href="images/gamepad-variant-outline.svg">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="images/gamepad-variant-outline.svg"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div id="playerX">
+          <p>Player 1</p>
+          <h1>X</h1>
+        </div>
+        <div id="playerO">
+          <p>Player 2</p>
+          <h1>O</h1>
+        </div>
+      </div>
+      <div class="turn">
+        <div id="turnText"></div>
+        <div><button>Start Game</button></div>
+      </div>
+      <div class="board">
+        <button class="cell" data-row="0" data-col="0"></button
+        ><button class="cell" data-row="0" data-col="1"></button
+        ><button class="cell" data-row="0" data-col="2"></button>
+
+        <button class="cell" data-row="1" data-col="0"></button
+        ><button class="cell" data-row="1" data-col="1"></button
+        ><button class="cell" data-row="1" data-col="2"></button>
+
+        <button class="cell" data-row="2" data-col="0"></button
+        ><button class="cell" data-row="2" data-col="1"></button
+        ><button class="cell" data-row="2" data-col="2"></button>
+      </div>
+    </div>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

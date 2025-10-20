@@ -31,8 +31,8 @@ const playTurn = (function () {
       move = prompt(`${player}: Where would you like to place a mark? `);
     }
 
-    let row = Number(move.slice(0, 1));
-    let cell = Number(move.slice(1, 2));
+    let row = Number(move.slice(0, 1)) || move[0];
+    let cell = Number(move.slice(1, 2)) || move[1];
 
     if (board[row][cell] === "") {
       board[row][cell] = player;
@@ -189,4 +189,24 @@ function runGame() {
   playTurn.drawboard();
 }
 
-runGame();
+// runGame();
+
+// --- GUI ---
+
+document.querySelectorAll(".cell").forEach((cell) => {
+  cell.addEventListener("click", () => {
+    const row = cell.dataset.row;
+    const col = cell.dataset.col;
+    // const move = String(row + col);
+    const move = [row, col];
+    console.log(move);
+    playTurn.movePlayer(player.x, move);
+    cell.textContent = gameboard.grid[row][col];
+  });
+});
+
+function domTurn() {
+  const turnText = document.getElementById("turnText");
+  turnText.innerHTML = "<p>Player</p>";
+  
+}

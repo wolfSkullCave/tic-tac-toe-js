@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4rem;
+    text-align: center;
+}
+
+.turn {
+    display: grid;
+    grid-template-columns: auto auto;
+    /* align-items: end; */
+    justify-content: space-between;
+    width: 320px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+    width: 400px;
+    /* margin: 50px auto; */
+    justify-content: center;
+}
+
+.cell {
+    height: 100px;
+    width: 100px;
+    font-size: 4rem;
+}
+
+button {
+    padding: 8px 20px;
+}
