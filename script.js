@@ -1,3 +1,10 @@
+const player = (function () {
+  const x = "X";
+  const o = "O";
+
+  return { x, o };
+})();
+
 const gameboard = (function () {
   const positions = [
     ["00", "01", "02"],
@@ -24,6 +31,7 @@ const gameboard = (function () {
 
 const playTurn = (function () {
   const { grid, drawboard, drawPositons } = gameboard;
+  const { x, o } = player;
 
   const movePlayer = (player, move, board = grid) => {
     if (!move) {
@@ -42,13 +50,6 @@ const playTurn = (function () {
   };
 
   return { drawPositons, drawboard, movePlayer };
-})();
-
-const player = (function () {
-  const x = "X";
-  const o = "O";
-
-  return { x, o };
 })();
 
 const winConditions = (function () {
@@ -95,7 +96,9 @@ const winConditions = (function () {
   return { checkRows, checkCols, checkDiags, checkDraw, allChecks };
 })();
 
+// -------------------------
 // --- Tests for objects ---
+// -------------------------
 
 function testGameBoard() {
   console.log("--- Game board tests ---");
@@ -137,76 +140,33 @@ function testWinCons() {
 // testPlayTurn();
 // testWinCons();
 
-// run script
-function autoPlay() {
-  const xMoves = ["11", "20", "01"];
-  const oMoves = ["00", "02", "21"];
-  let winner = false;
-
-  console.log("--- Board positions ---");
-  playTurn.drawPositons();
-
-  console.log("--- Board state ---");
-  playTurn.drawboard();
-  let turnNo = 0;
-  let turnPlayer = [player.x, player.o];
-
-  while (!winner) {
-    console.log(`--- Turn ${turnNo}`);
-  }
-}
-
-function runGame() {
-  console.log("--- Board positions ---");
-  playTurn.drawPositons();
-
-  console.log("--- Board state ---");
-  playTurn.drawboard();
-
-  console.log("--- Player X goes first ---");
-  playTurn.movePlayer(player.x, "11");
-  playTurn.drawboard();
-  winConditions.allChecks(player.x);
-
-  console.log("--- Turn 2: Player O goes next ---");
-  playTurn.movePlayer(player.o, "00");
-  playTurn.drawboard();
-
-  console.log("--- Turn 3: Player X goes next ---");
-  playTurn.movePlayer(player.x, "20");
-  playTurn.drawboard();
-
-  console.log("--- Turn 4: Player O goes next ---");
-  playTurn.movePlayer(player.o, "02");
-  playTurn.drawboard();
-
-  console.log("--- Turn 5: Player X goes next ---");
-  playTurn.movePlayer(player.x, "01");
-  playTurn.drawboard();
-
-  console.log("--- Turn 6: Player O goes next ---");
-  playTurn.movePlayer(player.o, "21");
-  playTurn.drawboard();
-}
-
-// runGame();
-
+// -------------------------
 // --- GUI ---
+// -------------------------
+let currentPlayer = player.x;
+const turnText = document.getElementById("turn-text");
+const resetBtn = document.getElementById("resetBtn");
 
 document.querySelectorAll(".cell").forEach((cell) => {
   cell.addEventListener("click", () => {
     const row = cell.dataset.row;
     const col = cell.dataset.col;
-    // const move = String(row + col);
     const move = [row, col];
     console.log(move);
-    playTurn.movePlayer(player.x, move);
+
+    playTurn.movePlayer(currentPlayer, move);
     cell.textContent = gameboard.grid[row][col];
+    if (winConditions.allChecks(currentPlayer)) {
+      turnText.textContent =
+        currentPlayer === player.x
+          ? "Player 1 (X) Wins!"
+          : "Player 2 (O) Wins!";
+      resetBtn.style.display = "block";
+    } else if (winConditions.checkDraw()) {
+      turnText.textContent = "Draw";
+      resetBtn.style.display = "block";
+    }
+
+    currentPlayer = currentPlayer === player.x ? player.o : player.x;
   });
 });
-
-function domTurn() {
-  const turnText = document.getElementById("turnText");
-  turnText.innerHTML = "<p>Player</p>";
-  
-}

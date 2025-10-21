@@ -13,19 +13,11 @@
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <div id="playerX">
-          <p>Player 1</p>
-          <h1>X</h1>
-        </div>
-        <div id="playerO">
-          <p>Player 2</p>
-          <h1>O</h1>
-        </div>
-      </div>
-      <div class="turn">
-        <div id="turnText"></div>
-        <div><button>Start Game</button></div>
+      <div id="turn-display">
+        <h2 id="turn-text">Player 1's Turn</h2>
+        <button id="resetBtn" type="reset" onclick="location.reload()">
+          Play Again
+        </button>
       </div>
       <div class="board">
         <button class="cell" data-row="0" data-col="0"></button

@@ -5,20 +5,15 @@
     gap: 2rem;
 }
 
-.header {
+#turn-display {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4rem;
+    flex-direction: column;
     text-align: center;
 }
 
-.turn {
-    display: grid;
-    grid-template-columns: auto auto;
-    /* align-items: end; */
-    justify-content: space-between;
-    width: 320px;
+
+#turn-display button {
+    display: none;
 }
 
 .board {
@@ -26,7 +21,6 @@
     grid-template-columns: auto auto auto;
     gap: 10px;
     width: 400px;
-    /* margin: 50px auto; */
     justify-content: center;
 }
 
