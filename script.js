@@ -18,19 +18,25 @@ const gameboard = (function () {
     ["", "", ""],
   ];
 
-  const drawPositons = () => drawboard(positions);
-
   const drawboard = (board = grid) => {
     board.forEach((row) => {
       console.log(row);
     });
   };
 
-  return { grid, drawPositons, drawboard };
+  const render = () => {
+    document.querySelectorAll(".cell").forEach((cell) => {
+      const row = cell.dataset.row;
+      const col = cell.dataset.col;
+      cell.textContent = grid[row][col];
+    });
+  };
+
+  return { grid, drawboard, render };
 })();
 
 const playTurn = (function () {
-  const { grid, drawboard, drawPositons } = gameboard;
+  const { grid, drawboard, render } = gameboard;
   const { x, o } = player;
 
   const movePlayer = (player, move, board = grid) => {
@@ -39,21 +45,19 @@ const playTurn = (function () {
       move = prompt(`${player}: Where would you like to place a mark? `);
     }
 
-    let row = Number(move.slice(0, 1)) || move[0];
-    let cell = Number(move.slice(1, 2)) || move[1];
-
-    if (board[row][cell] === "") {
-      board[row][cell] = player;
+    const [row, col] = move.map(Number);
+    if (board[row][col] === "") {
+      board[row][col] = player;
     } else {
       console.log("Invalid move");
     }
   };
 
-  return { drawPositons, drawboard, movePlayer };
+  return { movePlayer };
 })();
 
 const winConditions = (function () {
-  const { grid, drawboard, drawPositons } = gameboard;
+  const { grid, drawboard, render } = gameboard;
 
   const checkRows = (player, board) =>
     board.some((row) => row.every((cell) => cell === player));
@@ -108,8 +112,8 @@ function testGameBoard() {
 
 function testPlayTurn() {
   console.log("--- Play turn tests ---");
-  playTurn.movePlayer(player.x, "11");
-  playTurn.drawboard();
+  gameboard.movePlayer(player.x, "11");
+  gameboard.drawboard();
 }
 
 function testWinCons() {
@@ -143,30 +147,35 @@ function testWinCons() {
 // -------------------------
 // --- GUI ---
 // -------------------------
-let currentPlayer = player.x;
-const turnText = document.getElementById("turn-text");
-const resetBtn = document.getElementById("resetBtn");
 
-document.querySelectorAll(".cell").forEach((cell) => {
-  cell.addEventListener("click", () => {
-    const row = cell.dataset.row;
-    const col = cell.dataset.col;
-    const move = [row, col];
-    console.log(move);
+const gameController = (function () {
+  let currentPlayer = player.x;
+  let gameover = false;
 
-    playTurn.movePlayer(currentPlayer, move);
-    cell.textContent = gameboard.grid[row][col];
-    if (winConditions.allChecks(currentPlayer)) {
-      turnText.textContent =
-        currentPlayer === player.x
-          ? "Player 1 (X) Wins!"
-          : "Player 2 (O) Wins!";
-      resetBtn.style.display = "block";
-    } else if (winConditions.checkDraw()) {
-      turnText.textContent = "Draw";
-      resetBtn.style.display = "block";
-    }
+  const turnText = document.getElementById("turn-text");
+  // const resetBtn = document.getElementById("resetBtn");
 
-    currentPlayer = currentPlayer === player.x ? player.o : player.x;
+  document.querySelectorAll(".cell").forEach((cell) => {
+    cell.addEventListener("click", () => {
+      if (gameover || cell.textContent !== "") return;
+
+      const row = cell.dataset.row;
+      const col = cell.dataset.col;
+
+      playTurn.movePlayer(currentPlayer, [row, col]);
+      gameboard.render();
+
+      if (winConditions.allChecks(currentPlayer)) {
+        turnText.textContent = `${currentPlayer} Wins!`;
+        resetBtn.style.display = "block";
+        gameover = true;
+      } else if (winConditions.checkDraw()) {
+        turnText.textContent = "Draw";
+        resetBtn.style.display = "block";
+        gameover = true;
+      }
+
+      currentPlayer = currentPlayer === player.x ? player.o : player.x;
+    });
   });
-});
+})();
