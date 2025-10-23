@@ -183,7 +183,7 @@ const gameController = (function () {
   let gameover = false;
 
   const turnText = document.getElementById("turn-text");
-  const resetBtn = document.getElementById("resetBtn");
+  const startBtn = document.getElementById("startBtn");
 
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", () => {
@@ -197,10 +197,10 @@ const gameController = (function () {
 
       if (winConditions.allChecks(currentPlayer.mark)) {
         turnText.textContent = `Game Over: ${currentPlayer.name} Wins!`;
-        endgame();
+        endGame();
       } else if (winConditions.checkDraw()) {
         turnText.textContent = "Game Over: Draw";
-        endgame();
+        endGame();
       }
 
       currentPlayer = currentPlayer === player.one ? player.two : player.one;
@@ -221,29 +221,31 @@ const gameController = (function () {
       `);
   };
 
-  const endgame = () => {
-    resetBtn.style.display = "block";
+  const endGame = () => {
     gameover = true;
+    startBtn.textContent = "New Game";
   };
 
-  return { reset, states };
+  return { reset, states, gameover };
 })();
 
-// event listener for getting player names
-const nameBtn = document
-  .getElementById("nameBtn")
-  .addEventListener("click", () => {
-    player.setNames(player.getNames());
-  });
+function testBtn() {
+  console.log("A button has been clicked");
+}
 
-// event listener for resetting the game
-const resetBtn = document
-  .getElementById("resetBtn")
-  .addEventListener("click", () => {
+
+const startBtn = document.getElementById("startBtn");
+
+startBtn.addEventListener("click", () => {
+  player.setNames(player.getNames());
+
+  if (gameController.gameover === true) {
     gameboard.reset();
     gameController.reset();
-  });
+    startBtn.textContent = "New Game";
+  }
 
-function testBtn() {
-  console.log("button has been clicked");
-}
+  if (gameController.gameover === false) {
+    startBtn.textContent = "Start Game";
+  }
+});
