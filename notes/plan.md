@@ -15,7 +15,7 @@
 - Once the console version of the game is finished add an object to handle the DOM logic.
 - Write functions that allow player to add marks on specific parts of the board via DOM.
 - Add the following:
-  - Clean up display.
+  - Clean up display.✅
   - Allow player to enter their names.
   - Include a start/restart button.
   - Show game results at the end of the game.

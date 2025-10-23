@@ -2,6 +2,8 @@ const player = (function () {
   const x = "X";
   const o = "O";
 
+  const name = () => 'Player';
+
   return { x, o };
 })();
 
