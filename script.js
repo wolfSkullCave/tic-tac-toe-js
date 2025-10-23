@@ -2,9 +2,28 @@ const player = (function () {
   const x = "X";
   const o = "O";
 
-  const name = () => 'Player';
+  const one = {
+    mark: "X",
+    name: "Player One",
+  };
+  const two = {
+    mark: "O",
+    name: "Player Two",
+  };
+  const getNames = () => {
+    const player1 = document.getElementById("player1Name").value;
+    const player2 = document.getElementById("player2Name").value;
 
-  return { x, o };
+    // console.log(`${player1}, ${player2}`);
+    return [player1, player2];
+  };
+
+  const setNames = (names) => {
+    player.one.name = names[0];
+    player.two.name = names[1];
+  };
+
+  return { one, two, getNames, setNames };
 })();
 
 const gameboard = (function () {
@@ -34,14 +53,23 @@ const gameboard = (function () {
     });
   };
 
-  return { grid, drawboard, render };
+  const reset = () => {
+    for (let row = 0; row < 3; row++) {
+      for (let cell = 0; cell < 3; cell++) {
+        grid[row][cell] = "";
+      }
+    }
+
+    render();
+  };
+
+  return { grid, drawboard, render, reset };
 })();
 
 const playTurn = (function () {
-  const { grid, drawboard, render } = gameboard;
-  const { x, o } = player;
+  // const { grid, drawboard, render } = gameboard;
 
-  const movePlayer = (player, move, board = grid) => {
+  const movePlayer = (player, move, board = gameboard.grid) => {
     if (!move) {
       const prompt = require("prompt-sync")({ siginit: true });
       move = prompt(`${player}: Where would you like to place a mark? `);
@@ -151,11 +179,11 @@ function testWinCons() {
 // -------------------------
 
 const gameController = (function () {
-  let currentPlayer = player.x;
+  let currentPlayer = player.one;
   let gameover = false;
 
   const turnText = document.getElementById("turn-text");
-  // const resetBtn = document.getElementById("resetBtn");
+  const resetBtn = document.getElementById("resetBtn");
 
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", () => {
@@ -164,20 +192,58 @@ const gameController = (function () {
       const row = cell.dataset.row;
       const col = cell.dataset.col;
 
-      playTurn.movePlayer(currentPlayer, [row, col]);
+      playTurn.movePlayer(currentPlayer.mark, [row, col]);
       gameboard.render();
 
-      if (winConditions.allChecks(currentPlayer)) {
-        turnText.textContent = `${currentPlayer} Wins!`;
-        resetBtn.style.display = "block";
-        gameover = true;
+      if (winConditions.allChecks(currentPlayer.mark)) {
+        turnText.textContent = `Game Over: ${currentPlayer.name} Wins!`;
+        endgame();
       } else if (winConditions.checkDraw()) {
-        turnText.textContent = "Draw";
-        resetBtn.style.display = "block";
-        gameover = true;
+        turnText.textContent = "Game Over: Draw";
+        endgame();
       }
 
-      currentPlayer = currentPlayer === player.x ? player.o : player.x;
+      currentPlayer = currentPlayer === player.one ? player.two : player.one;
     });
   });
+
+  const reset = () => {
+    currentPlayer = player.one;
+    gameover = false;
+    resetBtn.style.display = "none";
+  };
+
+  const states = () => {
+    console.log(`
+      current player's name: ${currentPlayer.name},
+      current player's mark: ${currentPlayer.mark}, 
+      gameover: ${gameover}
+      `);
+  };
+
+  const endgame = () => {
+    resetBtn.style.display = "block";
+    gameover = true;
+  };
+
+  return { reset, states };
 })();
+
+// event listener for getting player names
+const nameBtn = document
+  .getElementById("nameBtn")
+  .addEventListener("click", () => {
+    player.setNames(player.getNames());
+  });
+
+// event listener for resetting the game
+const resetBtn = document
+  .getElementById("resetBtn")
+  .addEventListener("click", () => {
+    gameboard.reset();
+    gameController.reset();
+  });
+
+function testBtn() {
+  console.log("button has been clicked");
+}

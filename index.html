@@ -13,22 +13,22 @@
   </head>
   <body>
     <div class="container">
-      <div id="turn-display">
-        <div>
-          <label for="player1Name">Player 1 Name: </label>
+      <div class="grid-container">
+        <h1>Enter player names</h1>
+        <form action="">
+          <label for="player1Name">Player 1: </label>
           <input type="text" name="player1Name" id="player1Name" />
-        </div>
-
-        <div>
-          <label for="player2Name">Player 2 Name: </label>
+          <label for="player2Name">Player 2: </label>
           <input type="text" name="player2Name" id="player2Name" />
-        </div>
-        
-        <h1 id="turn-text">Player 1's Turn</h1>
-        <button id="resetBtn" type="reset" onclick="location.reload()">
-          Play Again
-        </button>
+          <input type="button" value="submit" id="nameBtn" />
+        </form>
       </div>
+
+      <div class="flex-container">
+        <h1 id="turn-text">Player 1's Turn</h1>
+        <button id="resetBtn" type="reset">Play Again</button>
+      </div>
+
       <div class="board">
         <button class="cell" data-row="0" data-col="0"></button
         ><button class="cell" data-row="0" data-col="1"></button
@@ -43,6 +43,7 @@
         ><button class="cell" data-row="2" data-col="2"></button>
       </div>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>

@@ -16,7 +16,7 @@
 - Write functions that allow player to add marks on specific parts of the board via DOM.
 - Add the following:
   - Clean up display.✅
-  - Allow player to enter their names.
+  - Allow player to enter their names.✅
   - Include a start/restart button.
   - Show game results at the end of the game.
 
@@ -140,3 +140,4 @@ player_move(player2)
 checkWinConditions(player2.sym, row1,row2,row3)
 END
 END
+
