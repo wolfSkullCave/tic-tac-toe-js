@@ -177,5 +177,14 @@ gameController
 - button triggers event
 - starts game controller?
   - rename player name button?
-- sets player names
+- gets/sets player names ✅
+  - validates player names ✅
 - starts game controller
+  - Activates game board
+  - Player 1 moves
+    - Validate player 1's move
+    - Check for winner or draw
+  - Player 2 moves
+    - validate player 2's move
+    - check for a winner or draw
+  - Once a winner or draw is decided stop the game

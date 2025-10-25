@@ -6,22 +6,20 @@ const player = (function () {
     mark: "X",
     name: "Player One",
   };
+
   const two = {
     mark: "O",
     name: "Player Two",
-  };
-  const getNames = () => {
-    const player1 = document.getElementById("player1Name").value;
-    const player2 = document.getElementById("player2Name").value;
-
-    // console.log(`${player1}, ${player2}`);
-    return [player1, player2];
   };
 
   const setNames = (names) => {
     player.one.name = names[0];
     player.two.name = names[1];
   };
+
+  // testing methods
+  const getNames = () =>
+    console.log(`Player 1: ${player.one.name}, Player 2: ${player.two.name}`);
 
   return { one, two, getNames, setNames };
 })();
@@ -67,8 +65,6 @@ const gameboard = (function () {
 })();
 
 const playTurn = (function () {
-  // const { grid, drawboard, render } = gameboard;
-
   const movePlayer = (player, move, board = gameboard.grid) => {
     if (!move) {
       const prompt = require("prompt-sync")({ siginit: true });
@@ -116,136 +112,91 @@ const winConditions = (function () {
     board.every((row) => row.every((cell) => cell !== ""));
 
   const allChecks = (player, board = grid) => {
-    if (checkCols(player, board)) {
-      return true;
-    } else if (checkDiags(player, board)) {
-      return true;
-    } else if (checkRows(player, board)) {
-      return true;
-    } else {
-      return false;
-    }
+    // if (checkCols(player, board)) {
+    //   return true;
+    // } else if (checkDiags(player, board)) {
+    //   return true;
+    // } else if (checkRows(player, board)) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+    return (
+      checkCols(player, board) ||
+      checkDiags(player, board) ||
+      checkRows(player, board) ||
+      false
+    );
   };
 
   return { checkRows, checkCols, checkDiags, checkDraw, allChecks };
 })();
 
 // -------------------------
-// --- Tests for objects ---
+// --- GUI components ---
 // -------------------------
 
-function testGameBoard() {
-  console.log("--- Game board tests ---");
-  console.log("Grid: ", gameboard.grid);
-  gameboard.drawboard();
+function getPlayerNames() {
+  // gets player names from input fields, stores them in an arrary
+  // and sets them using the player.setNames() method
+  const player1 = document.getElementById("player1Name").value;
+  const player2 = document.getElementById("player2Name").value;
+
+  const names = [player1, player2];
+
+  if (names.some(validateName)) {
+    player.setNames(names);
+  } else {
+    console.log("Warning: One or more player names are invalid");
+  }
+
+  function validateName(name) {
+    return name !== "";
+  }
 }
 
-function testPlayTurn() {
-  console.log("--- Play turn tests ---");
-  gameboard.movePlayer(player.x, "11");
-  gameboard.drawboard();
-}
-
-function testWinCons() {
-  console.log("--- Play turn tests ---");
-  const testboard = [
-    ["X", "X", "X"],
-    ["X", "X", "O"],
-    ["X", "O", "O"],
-  ];
-
-  const testDraw = [
-    ["X", "X", "O"],
-    ["O", "X", "X"],
-    ["X", "O", "O"],
-  ];
-
-  console.log("check rows: ", winConditions.checkRows(player.x, testboard));
-  console.log("check columns: ", winConditions.checkCols(player.x, testboard));
-  console.log(
-    "check diagonals: ",
-    winConditions.checkDiags(player.x, testboard)
-  );
-  console.log("Check for draw: ", winConditions.checkDraw(testDraw));
-  console.log("All checks: ", winConditions.allChecks(player.x, testDraw));
-}
-
-// testGameBoard();
-// testPlayTurn();
-// testWinCons();
-
-// -------------------------
-// --- GUI ---
-// -------------------------
-
-const gameController = (function () {
+function activateBoard() {
   let currentPlayer = player.one;
   let gameover = false;
 
-  const turnText = document.getElementById("turn-text");
-  const startBtn = document.getElementById("startBtn");
+  function updateHeading(text) {
+    let turn = document.getElementById("turn-text");
+    turn.textContent = text;
+  }
 
-  document.querySelectorAll(".cell").forEach((cell) => {
+  updateHeading(`${currentPlayer.name}'s turn`);
+
+  const board = document.querySelectorAll(".cell");
+  board.forEach((cell) => {
     cell.addEventListener("click", () => {
-      if (gameover || cell.textContent !== "") return;
+      if (gameover) return;
 
       const row = cell.dataset.row;
       const col = cell.dataset.col;
 
       playTurn.movePlayer(currentPlayer.mark, [row, col]);
       gameboard.render();
-
-      if (winConditions.allChecks(currentPlayer.mark)) {
-        turnText.textContent = `Game Over: ${currentPlayer.name} Wins!`;
-        endGame();
-      } else if (winConditions.checkDraw()) {
-        turnText.textContent = "Game Over: Draw";
-        endGame();
-      }
-
-      currentPlayer = currentPlayer === player.one ? player.two : player.one;
+      gameover =
+        winConditions.allChecks(currentPlayer.mark) ||
+        winConditions.checkDraw();
+      switchPlayer();
+      updateHeading(`${currentPlayer.name}'s turn`);
     });
   });
 
-  const reset = () => {
-    currentPlayer = player.one;
-    gameover = false;
-    resetBtn.style.display = "none";
-  };
-
-  const states = () => {
-    console.log(`
-      current player's name: ${currentPlayer.name},
-      current player's mark: ${currentPlayer.mark}, 
-      gameover: ${gameover}
-      `);
-  };
-
-  const endGame = () => {
-    gameover = true;
-    startBtn.textContent = "New Game";
-  };
-
-  return { reset, states, gameover };
-})();
-
-function testBtn() {
-  console.log("A button has been clicked");
+  function switchPlayer() {
+    currentPlayer = currentPlayer === player.one ? player.two : player.one;
+  }
 }
 
-
+// GUI tests
 const startBtn = document.getElementById("startBtn");
-
 startBtn.addEventListener("click", () => {
-  player.setNames(player.getNames());
-
-  if (gameController.gameover === true) {
-    gameboard.reset();
-    gameController.reset();
-    startBtn.textContent = "New Game";
-  }
-
-  if (gameController.gameover === false) {
-    startBtn.textContent = "Start Game";
-  }
+  getPlayerNames();
+  player.getNames();
+  activateBoard();
 });
+
+function print(txt) {
+  console.log(txt);
+}
