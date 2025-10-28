@@ -75,7 +75,8 @@ const playTurn = (function () {
     if (board[row][col] === "") {
       board[row][col] = player;
     } else {
-      console.log("Invalid move");
+      console.log(`Warning: Invalid move on position [${row}][${col}]`);
+      console.log(board);
     }
   };
 
@@ -161,32 +162,61 @@ function activateBoard() {
 
   function updateHeading(text) {
     let turn = document.getElementById("turn-text");
-    turn.textContent = text;
+    if (turn) turn.textContent = text;
   }
 
   updateHeading(`${currentPlayer.name}'s turn`);
 
+  // clear event listeners from cells
+  document.querySelectorAll(".cell").forEach((cell) => {
+    const clone = cell.cloneNode(true);
+    cell.parentNode.replaceChild(clone, cell);
+  });
+
   const board = document.querySelectorAll(".cell");
   board.forEach((cell) => {
     cell.addEventListener("click", () => {
-      if (gameover) return;
+      if (gameover || cell.textContent !== "") return;
+      // if (cell.textContent !== "") return;
 
       const row = cell.dataset.row;
       const col = cell.dataset.col;
 
       playTurn.movePlayer(currentPlayer.mark, [row, col]);
       gameboard.render();
+
       gameover =
         winConditions.allChecks(currentPlayer.mark) ||
         winConditions.checkDraw();
-      switchPlayer();
+
+      if (gameover) {
+        if (winConditions.checkDraw()) updateHeading("Draw!");
+        else updateHeading(`${currentPlayer.name} wins!`);
+        return;
+      }
+
+      currentPlayer = currentPlayer === player.one ? player.two : player.one;
       updateHeading(`${currentPlayer.name}'s turn`);
     });
   });
+}
 
-  function switchPlayer() {
-    currentPlayer = currentPlayer === player.one ? player.two : player.one;
-  }
+function resetGame() {
+  // Make sure we don't stack listeners: replace button with clone and then add a single handler
+  const originalBtn = document.getElementById("startBtn");
+  if (!originalBtn) return;
+  const btn = originalBtn.cloneNode(true);
+  originalBtn.parentNode.replaceChild(btn, originalBtn);
+
+  btn.addEventListener("click", () => {
+    gameboard.reset();
+    document.getElementById(
+      "turn-text"
+    ).textContent = `${player.one.name}'s turn`;
+    activateBoard();
+  });
+
+  document.getElementById("startBtn").textContent = "Reset Game";
 }
 
 // GUI tests
@@ -195,6 +225,7 @@ startBtn.addEventListener("click", () => {
   getPlayerNames();
   player.getNames();
   activateBoard();
+  resetGame();
 });
 
 function print(txt) {
