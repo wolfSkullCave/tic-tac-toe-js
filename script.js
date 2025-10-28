@@ -5,11 +5,13 @@ const player = (function () {
   const one = {
     mark: "X",
     name: "Player One",
+    wins: 0,
   };
 
   const two = {
     mark: "O",
     name: "Player Two",
+    wins: 0,
   };
 
   const setNames = (names) => {
@@ -86,8 +88,18 @@ const playTurn = (function () {
 const winConditions = (function () {
   const { grid, drawboard, render } = gameboard;
 
-  const checkRows = (player, board) =>
-    board.some((row) => row.every((cell) => cell === player));
+  function addWinner(player) {
+    winners.push(player);
+    return winners;
+  }
+
+  const checkRows = (player, board = grid) => {
+    const win = board.some((row) => row.every((cell) => cell === player.mark));
+    if (win) {
+      player.wins++;
+    }
+    return win;
+  };
 
   const checkCols = (player, board = grid) => {
     // create a new array consisting of the columns of the board array
@@ -113,15 +125,6 @@ const winConditions = (function () {
     board.every((row) => row.every((cell) => cell !== ""));
 
   const allChecks = (player, board = grid) => {
-    // if (checkCols(player, board)) {
-    //   return true;
-    // } else if (checkDiags(player, board)) {
-    //   return true;
-    // } else if (checkRows(player, board)) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
     return (
       checkCols(player, board) ||
       checkDiags(player, board) ||
@@ -186,12 +189,12 @@ function activateBoard() {
       gameboard.render();
 
       gameover =
-        winConditions.allChecks(currentPlayer.mark) ||
-        winConditions.checkDraw();
+        winConditions.allChecks(currentPlayer) || winConditions.checkDraw();
 
       if (gameover) {
         if (winConditions.checkDraw()) updateHeading("Draw!");
         else updateHeading(`${currentPlayer.name} wins!`);
+        updateScore();
         return;
       }
 
@@ -219,10 +222,19 @@ function resetGame() {
   document.getElementById("startBtn").textContent = "Reset Game";
 }
 
+function updateScore() {
+  const scoreTxt = document.getElementById("scoreBoard");
+  scoreTxt.innerHTML = `
+  <h3>Score Board</h3>
+  <p>${player.one.name}: ${player.one.wins}</p>
+  <p>${player.two.name}: ${player.two.wins}</p>`;
+}
+
 // GUI tests
 const startBtn = document.getElementById("startBtn");
 startBtn.addEventListener("click", () => {
   getPlayerNames();
+  updateScore();
   player.getNames();
   activateBoard();
   resetGame();
