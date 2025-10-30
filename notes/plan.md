@@ -18,7 +18,7 @@
   - Clean up display.✅
   - Allow player to enter their names.✅
   - Include a start/restart button.✅
-  - Show game results at the end of the game. (keep score?)
+  - Show game results at the end of the game. (keep score?)✅
 
 ### Planning
 

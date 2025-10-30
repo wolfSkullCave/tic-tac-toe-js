@@ -14,31 +14,26 @@
   <body>
     <div class="wrapper">
       <div class="box1">
-        <div class="flex-container">
-          <h1>Enter player names</h1>
-          <form action="" class="playerForm">
-            <label for="player1Name">Player 1: </label>
-            <input type="text" name="player1Name" id="player1Name" />
-            <label for="player2Name">Player 2: </label>
-            <input type="text" name="player2Name" id="player2Name" />
-          </form>
-          <button id="startBtn" type="reset">Start Game</button>
-        </div>
+        <h1>Enter player names</h1>
+        <form action="" class="playerForm">
+          <label for="player1Name">Player 1: </label>
+          <input type="text" name="player1Name" id="player1Name" />
+          <label for="player2Name">Player 2: </label>
+          <input type="text" name="player2Name" id="player2Name" />
+        </form>
       </div>
 
       <div class="box2 scoreBoard">
-        <h2 id="turn-text">Start Game</h2>
-        <div class="p1">
-          <p id="p1Label">Player 1</p>
-          <p id="p1Score">0</p>
-        </div>
-        <div class="p2">
-          <p id="p1Label">Player 2</p>
-          <p id="p2Score">0</p>
-        </div>
+        <p id="p1Label">Player 1 Score:</p>
+        <p id="p1Score">0</p>
+        <p id="p1Label">Player 2 Score:</p>
+        <p id="p2Score">0</p>
       </div>
 
       <div class="box3">
+        <h2 id="turn-text">Press Start</h2>
+        <button id="startBtn" type="reset">Start</button>
+
         <div class="board">
           <button class="cell" data-row="0" data-col="0"></button
           ><button class="cell" data-row="0" data-col="1"></button

@@ -223,13 +223,7 @@ function resetGame() {
 }
 
 function updateScore() {
-  // const scoreTxt = document.getElementById("scoreBoard");
-  // scoreTxt.innerHTML = `
-  // <h3>Score Board</h3>
-  // <p>${player.one.name}: ${player.one.wins}</p>
-  // <p>${player.two.name}: ${player.two.wins}</p>`;
   const p1Score = document.getElementById("p1Score");
-  const tieScore = document.getElementById("tieScore");
   const p2Score = document.getElementById("p2Score");
 
   p1Score.textContent = player.one.wins;
