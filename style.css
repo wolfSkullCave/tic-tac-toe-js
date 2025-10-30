@@ -74,11 +74,11 @@ h3 {
 
 .scoreBoard {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     grid-template-rows: repeat(2, auto);
     text-align: center;
 }
 
-.scoreBoard .innerbox1 {
-    grid-column: 1/4;
+.scoreBoard #turn-text {
+    grid-column: 1/3;
 }
