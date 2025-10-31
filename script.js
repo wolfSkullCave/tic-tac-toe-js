@@ -228,6 +228,11 @@ function updateScore() {
 
   p1Score.textContent = player.one.wins;
   p2Score.textContent = player.two.wins;
+
+  const p1Label = document.getElementById("p1Label");
+  const p2Label = document.getElementById("p2Label");
+  p1Label.innerHTML = `${player.one.name}: `;
+  p2Label.textContent = player.two.name;
 }
 
 // GUI tests
@@ -235,11 +240,7 @@ const startBtn = document.getElementById("startBtn");
 startBtn.addEventListener("click", () => {
   getPlayerNames();
   updateScore();
-  player.getNames();
+  // player.getNames();
   activateBoard();
   resetGame();
 });
-
-function print(txt) {
-  console.log(txt);
-}
