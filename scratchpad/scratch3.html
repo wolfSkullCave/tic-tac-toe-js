@@ -9,41 +9,39 @@
       type="image/svg+xml"
       href="images/gamepad-variant-outline.svg"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="flex-container">
-        <h1>Enter player names</h1>
-        <form action="" class="playerForm">
-          <label for="player1Name">Player 1: </label>
-          <input type="text" name="player1Name" id="player1Name" />
-          <label for="player2Name">Player 2: </label>
-          <input type="text" name="player2Name" id="player2Name" />
-        </form>
-        <button id="startBtn" type="reset">Start Game</button>
-      </div>
-
-      <div class="flex-container">
+    <div class="wrapper">
+      <div class="box1">
         <h1 id="turn-text"></h1>
-        <div id="scoreBoard"></div>
       </div>
 
-      <div class="board">
-        <button class="cell" data-row="0" data-col="0"></button
-        ><button class="cell" data-row="0" data-col="1"></button
-        ><button class="cell" data-row="0" data-col="2"></button>
+      <div class="box2 scoreBoard">
+        <p id="p1Label">Player 1:</p>
+        <p id="p1Score">0</p>
+        <p id="p2Label">Player 2:</p>
+        <p id="p2Score">0</p>
+        <button id="startBtn" type="reset">New Game</button>
+      </div>
 
-        <button class="cell" data-row="1" data-col="0"></button
-        ><button class="cell" data-row="1" data-col="1"></button
-        ><button class="cell" data-row="1" data-col="2"></button>
+      <div class="box3">
+        <div class="board">
+          <button class="cell" data-row="0" data-col="0"></button
+          ><button class="cell" data-row="0" data-col="1"></button
+          ><button class="cell" data-row="0" data-col="2"></button>
 
-        <button class="cell" data-row="2" data-col="0"></button
-        ><button class="cell" data-row="2" data-col="1"></button
-        ><button class="cell" data-row="2" data-col="2"></button>
+          <button class="cell" data-row="1" data-col="0"></button
+          ><button class="cell" data-row="1" data-col="1"></button
+          ><button class="cell" data-row="1" data-col="2"></button>
+
+          <button class="cell" data-row="2" data-col="0"></button
+          ><button class="cell" data-row="2" data-col="1"></button
+          ><button class="cell" data-row="2" data-col="2"></button>
+        </div>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="scratch3.js"></script>
   </body>
 </html>
