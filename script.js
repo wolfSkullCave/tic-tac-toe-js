@@ -1,30 +1,12 @@
-const player = (function () {
-  const x = "X";
-  const o = "O";
+// -------------------------------
+// Logic components
+// -------------------------------
 
-  const one = {
-    mark: "X",
-    name: "Player One",
-    wins: 0,
-  };
+function player(name, symbol) {
+  let score = 0;
 
-  const two = {
-    mark: "O",
-    name: "Player Two",
-    wins: 0,
-  };
-
-  const setNames = (names) => {
-    player.one.name = names[0];
-    player.two.name = names[1];
-  };
-
-  // testing methods
-  const getNames = () =>
-    console.log(`Player 1: ${player.one.name}, Player 2: ${player.two.name}`);
-
-  return { one, two, getNames, setNames };
-})();
+  return { name, symbol, score };
+}
 
 const gameboard = (function () {
   const positions = [
@@ -94,9 +76,11 @@ const winConditions = (function () {
   }
 
   const checkRows = (player, board = grid) => {
-    const win = board.some((row) => row.every((cell) => cell === player.mark));
+    const win = board.some((row) =>
+      row.every((cell) => cell === player.symbol)
+    );
     if (win) {
-      player.wins++;
+      player.score++;
     }
     return win;
   };
@@ -136,31 +120,22 @@ const winConditions = (function () {
   return { checkRows, checkCols, checkDiags, checkDraw, allChecks };
 })();
 
-// -------------------------
-// --- GUI components ---
-// -------------------------
+// -------------------------------
+// GUI components
+// -------------------------------
 
-function getPlayerNames() {
-  // gets player names from input fields, stores them in an arrary
-  // and sets them using the player.setNames() method
-  const player1 = document.getElementById("player1Name").value;
-  const player2 = document.getElementById("player2Name").value;
+const getNamesGUI = (function () {
+  let p1Name = prompt("Player 1: Please enter your name:", "Player 1");
+  let p2Name = prompt("Player 2: Please enter your name:", "Player 2");
 
-  const names = [player1, player2];
+  const player1 = player(p1Name, "X");
+  const player2 = player(p2Name, "O");
 
-  if (names.some(validateName)) {
-    player.setNames(names);
-  } else {
-    console.log("Warning: One or more player names are invalid");
-  }
+  return { player1, player2 };
+})();
 
-  function validateName(name) {
-    return name !== "";
-  }
-}
-
-function activateBoard() {
-  let currentPlayer = player.one;
+function activateBoard(player1, player2) {
+  let currentPlayer = player1;
   let gameover = false;
 
   function updateHeading(text) {
@@ -180,12 +155,11 @@ function activateBoard() {
   board.forEach((cell) => {
     cell.addEventListener("click", () => {
       if (gameover || cell.textContent !== "") return;
-      // if (cell.textContent !== "") return;
 
       const row = cell.dataset.row;
       const col = cell.dataset.col;
 
-      playTurn.movePlayer(currentPlayer.mark, [row, col]);
+      playTurn.movePlayer(currentPlayer.symbol, [row, col]);
       gameboard.render();
 
       gameover =
@@ -198,7 +172,7 @@ function activateBoard() {
         return;
       }
 
-      currentPlayer = currentPlayer === player.one ? player.two : player.one;
+      currentPlayer = currentPlayer === player1 ? player2 : player1;
       updateHeading(`${currentPlayer.name}'s turn`);
     });
   });
@@ -213,9 +187,7 @@ function resetGame() {
 
   btn.addEventListener("click", () => {
     gameboard.reset();
-    document.getElementById(
-      "turn-text"
-    ).textContent = `${player.one.name}'s turn`;
+    document.getElementById("turn-text").textContent = `${player1.name}'s turn`;
     activateBoard();
   });
 
@@ -226,21 +198,32 @@ function updateScore() {
   const p1Score = document.getElementById("p1Score");
   const p2Score = document.getElementById("p2Score");
 
-  p1Score.textContent = player.one.wins;
-  p2Score.textContent = player.two.wins;
+  p1Score.textContent = player1.wins;
+  p2Score.textContent = player2.wins;
 
   const p1Label = document.getElementById("p1Label");
   const p2Label = document.getElementById("p2Label");
-  p1Label.innerHTML = `${player.one.name}: `;
-  p2Label.textContent = player.two.name;
+  p1Label.textContent = player1.name;
+  p2Label.textContent = player2.name;
 }
 
-// GUI tests
+
+
+
+
+
+// Testing code
+console.log(getNamesGUI.player1.name);
+console.log(getNamesGUI.player2.name);
+
+activateBoard(getNamesGUI.player1, getNamesGUI.player2);
+updateScore();
+
+
+
 const startBtn = document.getElementById("startBtn");
 startBtn.addEventListener("click", () => {
-  getPlayerNames();
   updateScore();
-  // player.getNames();
-  activateBoard();
+  activateBoard(getNamesGUI.player1, getNamesGUI.player2);
   resetGame();
 });
