@@ -40,6 +40,12 @@ Build a functional and cleanly structured Tic-Tac-Toe game that:
 
 ---
 
+## Demo
+
+[![Preview](https://your-image-url.com/screenshot.png)](https://wolfskullcave.github.io/tic-tac-toe-js/)
+
+---
+
 ## 💡 Notes
 
 This project follows **The Odin Project’s** JavaScript curriculum principles for modular code design, emphasizing readability and reusability.
