@@ -40,9 +40,9 @@ Build a functional and cleanly structured Tic-Tac-Toe game that:
 
 ---
 
-## Demo
+## 🖥️ Demo
 
-[![Preview](https://your-image-url.com/screenshot.png)](https://wolfskullcave.github.io/tic-tac-toe-js/)
+[![Preview](preview.png)](https://wolfskullcave.github.io/tic-tac-toe-js/)
 
 ---
 
